@@ -1,10 +1,9 @@
-import { IsInt, IsString, Length } from 'class-validator'
+import { IsNumber, IsString } from 'class-validator'
 
 export class EnvVariables {
-    
-    @IsInt()
-    @Length(4)
-    PORT: number
+
+    @IsNumber()
+    PORT: number = 3333
 
     @IsString()
     DATABASE_URL: string

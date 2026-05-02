@@ -9,7 +9,7 @@ import { ImportLoteResult } from "./dtos/import-lote.result";
 export class ConcursoService {
   private readonly logger = new Logger(ConcursoService.name);
 
-  constructor(private readonly concursoRepository: ConcursoRepository) {}
+  constructor(private readonly concursoRepository: ConcursoRepository) { }
 
   // ── hash ──────────────────────────────────────────────────────────────────
   // SHA-256 determinístico — essencial para @unique no banco.
@@ -17,10 +17,10 @@ export class ConcursoService {
   // tornando impossível detectar combinações duplicadas.
 
   private hashDezenas(dezenas: number[]): string {
-    const ordenadas = [...dezenas].sort((a, b) => a - b);
-    return createHash("sha256")
+    const ordenadas = [...dezenas].sort((a, b) => a - b)
+    return createHash('sha256')
       .update(JSON.stringify(ordenadas))
-      .digest("hex");
+      .digest('hex')
   }
 
   // ── inserir único ─────────────────────────────────────────────────────────

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { ConcursoService } from "./consurso.service";
+import { ConcursoService } from "./concurso.service";
 import { ConcursoRepository } from "./repositories/concurso.repository";
 import { PrismaConcursoRepository } from "./repositories/prisma/prisma-concurso.repository";
 import { PrismaModule } from "../config/prisma/prisma.module"; 
