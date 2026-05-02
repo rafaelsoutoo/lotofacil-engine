@@ -1,3 +1,4 @@
+import 'dotenv/config' 
 import { plainToInstance } from 'class-transformer'
 import { validateSync } from 'class-validator'
 import { EnvVariables } from './env.dto'
