@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common'
+import { Body, Controller, Post } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FiltroService } from './filtro.service'
 import { FiltroConcursoDTO } from './dtos/filtro-concurso.dto'
-import { ApiFiltroQueries } from './decorators/api-filtro-queries.decorator'
 
 @ApiTags('filtros')
 @Controller('filtro')

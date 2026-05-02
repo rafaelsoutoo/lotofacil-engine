@@ -35,7 +35,6 @@ export class FiltroService {
   private readonly pageLimitePadrao = 200
   private readonly pageLimiteMaximo = 5000
 
-  // ── filtrar cartelas combinatórias (15 de 25) ────────────────────────────
 
   async filtrar(dto: FiltroConcursoDTO): Promise<FiltroCombinatorioResult> {
     const page = Math.max(dto.page ?? this.pagePadrao, 1)
