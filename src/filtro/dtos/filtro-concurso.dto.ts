@@ -145,7 +145,18 @@ export class FiltroConcursoDTO {
   faixa21a25Max?: number
 
   @ApiPropertyOptional({
-    description: 'Quantidade maxima de cartelas retornadas na resposta',
+    description: 'Pagina atual da resposta paginada',
+    example: 1,
+    minimum: 1,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number
+
+  @ApiPropertyOptional({
+    description: 'Quantidade de cartelas por pagina',
     example: 200,
     minimum: 1,
     maximum: 5000,
@@ -155,5 +166,5 @@ export class FiltroConcursoDTO {
   @IsInt()
   @Min(1)
   @Max(5000)
-  limiteRetorno?: number
+  pageLimite?: number
 }

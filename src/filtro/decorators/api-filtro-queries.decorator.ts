@@ -80,11 +80,18 @@ export function ApiFiltroQueries() {
       description: 'Maximo na faixa 21 a 25',
     }),
     ApiQuery({
-      name: 'limiteRetorno',
+      name: 'page',
+      required: false,
+      type: Number,
+      example: 1,
+      description: 'Pagina atual',
+    }),
+    ApiQuery({
+      name: 'pageLimite',
       required: false,
       type: Number,
       example: 200,
-      description: 'Limite de cartelas retornadas (1 ate 5000)',
+      description: 'Quantidade de cartelas por pagina (1 ate 5000)',
     }),
   )
 }

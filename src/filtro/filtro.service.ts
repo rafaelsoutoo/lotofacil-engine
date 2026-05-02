@@ -18,23 +18,33 @@ export interface FiltroCombinatorioResult {
   tipoAnalise: 'combinatoria-lotofacil'
   totalCombinacoes: number
   totalFiltradas: number
-  limiteRetorno: number
+  paginacao: {
+    page: number
+    pageLimite: number
+    totalPaginas: number
+    temProxima: boolean
+    temAnterior: boolean
+  }
   cartelas: CartelaComMetricas[]
 }
 
 @Injectable()
 export class FiltroService {
   private readonly totalCombinacoes = 3268760
-  private readonly limitePadrao = 200
-  private readonly limiteMaximo = 5000
+  private readonly pagePadrao = 1
+  private readonly pageLimitePadrao = 200
+  private readonly pageLimiteMaximo = 5000
 
   // ── filtrar cartelas combinatórias (15 de 25) ────────────────────────────
 
   async filtrar(dto: FiltroConcursoDTO): Promise<FiltroCombinatorioResult> {
-    const limiteRetorno = Math.min(
-      Math.max(dto.limiteRetorno ?? this.limitePadrao, 1),
-      this.limiteMaximo,
+    const page = Math.max(dto.page ?? this.pagePadrao, 1)
+    const pageLimite = Math.min(
+      Math.max(dto.pageLimite ?? this.pageLimitePadrao, 1),
+      this.pageLimiteMaximo,
     )
+    const inicioPagina = (page - 1) * pageLimite
+    const fimPagina = inicioPagina + pageLimite
 
     const cartelas: CartelaComMetricas[] = []
     let totalFiltradas = 0
@@ -59,7 +69,8 @@ export class FiltroService {
 
         totalFiltradas += 1
 
-        if (cartelas.length < limiteRetorno) {
+        const indiceAtual = totalFiltradas - 1
+        if (indiceAtual >= inicioPagina && indiceAtual < fimPagina) {
           cartelas.push({
             dezenas: [...selecionadas],
             soma,
@@ -128,11 +139,19 @@ export class FiltroService {
 
     backtrack(1, [], 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
+    const totalPaginas = Math.max(1, Math.ceil(totalFiltradas / pageLimite))
+
     return {
       tipoAnalise: 'combinatoria-lotofacil',
       totalCombinacoes: this.totalCombinacoes,
       totalFiltradas,
-      limiteRetorno,
+      paginacao: {
+        page,
+        pageLimite,
+        totalPaginas,
+        temProxima: page < totalPaginas,
+        temAnterior: page > 1,
+      },
       cartelas,
     }
   }
