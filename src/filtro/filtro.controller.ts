@@ -2,27 +2,20 @@ import { Controller, Get, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FiltroService } from './filtro.service'
 import { FiltroConcursoDTO } from './dtos/filtro-concurso.dto'
+import { ApiFiltroQueries } from './decorators/api-filtro-queries.decorator'
 
-@ApiTags('filtro')
+@ApiTags('filtros')
 @Controller('filtro')
 export class FiltroController {
   constructor(private readonly filtroService: FiltroService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Filtrar combinações com base em soma, sequência, paridade e faixas' })
+  @ApiOperation({
+    summary:
+      'Filtrar cartelas combinatorias da Lotofacil (15 dezenas entre 1 e 25)',
+  })
+  @ApiFiltroQueries()
   filtrar(@Query() dto: FiltroConcursoDTO) {
     return this.filtroService.filtrar(dto)
-  }
-
-  @Get('estatisticas/soma')
-  @ApiOperation({ summary: 'Estatísticas de soma dos concursos' })
-  estatisticasSoma() {
-    return this.filtroService.estatisticasSoma()
-  }
-
-  @Get('estatisticas/sequencia')
-  @ApiOperation({ summary: 'Estatísticas de sequência dos concursos' })
-  estatisticasSequencia() {
-    return this.filtroService.estatisticasSequencia()
   }
 }
