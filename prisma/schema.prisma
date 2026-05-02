@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Concurso {
+  id      Int      @id @default(autoincrement())
+  numero  Int      @unique
+  data    DateTime @db.Date
+  dezenas Int[]
+  hash    String   @unique @db.VarChar(64)
+
+  soma           Int
+  pares          Int
+  impares        Int
+  maiorSequencia Int
+  faixa1a5       Int
+  faixa6a10      Int
+  faixa11a15     Int
+  faixa16a20     Int
+  faixa21a25     Int
+
+  createdAt DateTime @default(now())
+
+  @@index([soma])
+  @@index([pares])
+  @@index([maiorSequencia])
+  @@map("concursos")
+}
