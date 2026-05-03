@@ -1,18 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  Alert,
-  Box,
-  Button,
-  Heading,
-  HStack,
-  Input,
-  SimpleGrid,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
 import { useFiltroAnalise } from '@/src/hooks/useFiltroAnalise'
+
+const fieldClass =
+  'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
+
+const labelClass = 'block text-sm font-medium text-slate-700'
 
 export function FiltrosPage() {
   const [somaMin, setSomaMin] = useState('170')
@@ -26,58 +20,82 @@ export function FiltrosPage() {
   const { data, error, loading, executar } = useFiltroAnalise()
 
   return (
-    <Stack gap={6}>
-      <Box>
-        <Heading size="lg">Filtros combinatorios</Heading>
-        <Text mt={2} color="gray.600">
+    <div className="flex flex-col gap-6">
+      <header>
+        <h1 className="text-2xl font-semibold text-slate-900">
+          Filtros combinatorios
+        </h1>
+        <p className="mt-2 text-slate-600">
           Analise cartelas da Lotofacil (15 numeros em 25) com filtros no body.
-        </Text>
-      </Box>
+        </p>
+      </header>
 
-      <Box borderWidth="1px" borderRadius="lg" p={5} bg="white">
-        <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-          <Box>
-            <Text fontSize="sm" mb={1}>Soma minima</Text>
-            <Input value={somaMin} onChange={(e) => setSomaMin(e.target.value)} />
-          </Box>
-          <Box>
-            <Text fontSize="sm" mb={1}>Soma maxima</Text>
-            <Input value={somaMax} onChange={(e) => setSomaMax(e.target.value)} />
-          </Box>
-          <Box>
-            <Text fontSize="sm" mb={1}>Pares minimo</Text>
-            <Input value={paresMin} onChange={(e) => setParesMin(e.target.value)} />
-          </Box>
-          <Box>
-            <Text fontSize="sm" mb={1}>Pares maximo</Text>
-            <Input value={paresMax} onChange={(e) => setParesMax(e.target.value)} />
-          </Box>
-          <Box>
-            <Text fontSize="sm" mb={1}>Maior sequencia maxima</Text>
-            <Input
+      <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <label className={labelClass}>Soma minima</label>
+            <input
+              className={fieldClass}
+              value={somaMin}
+              onChange={(e) => setSomaMin(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Soma maxima</label>
+            <input
+              className={fieldClass}
+              value={somaMax}
+              onChange={(e) => setSomaMax(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Pares minimo</label>
+            <input
+              className={fieldClass}
+              value={paresMin}
+              onChange={(e) => setParesMin(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Pares maximo</label>
+            <input
+              className={fieldClass}
+              value={paresMax}
+              onChange={(e) => setParesMax(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Maior sequencia maxima</label>
+            <input
+              className={fieldClass}
               value={maiorSequenciaMax}
               onChange={(e) => setMaiorSequenciaMax(e.target.value)}
             />
-          </Box>
-          <HStack>
-            <Box flex="1">
-              <Text fontSize="sm" mb={1}>Pagina</Text>
-              <Input value={page} onChange={(e) => setPage(e.target.value)} />
-            </Box>
-            <Box flex="1">
-              <Text fontSize="sm" mb={1}>Page limite</Text>
-              <Input
+          </div>
+          <div className="grid grid-cols-2 gap-4 md:col-span-2">
+            <div>
+              <label className={labelClass}>Pagina</label>
+              <input
+                className={fieldClass}
+                value={page}
+                onChange={(e) => setPage(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Page limite</label>
+              <input
+                className={fieldClass}
                 value={pageLimite}
                 onChange={(e) => setPageLimite(e.target.value)}
               />
-            </Box>
-          </HStack>
-        </SimpleGrid>
+            </div>
+          </div>
+        </div>
 
-        <Button
-          mt={5}
-          colorPalette="blue"
-          loading={loading}
+        <button
+          type="button"
+          disabled={loading}
+          className="mt-5 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           onClick={() =>
             executar({
               somaMin: Number(somaMin),
@@ -90,30 +108,40 @@ export function FiltrosPage() {
             })
           }
         >
-          Analisar filtros
-        </Button>
-      </Box>
+          {loading ? 'Analisando…' : 'Analisar filtros'}
+        </button>
+      </section>
 
       {error ? (
-        <Alert.Root status="error">
-          <Alert.Indicator />
-          <Alert.Content>
-            <Alert.Title>Erro na analise</Alert.Title>
-            <Alert.Description>{error}</Alert.Description>
-          </Alert.Content>
-        </Alert.Root>
+        <div
+          role="alert"
+          className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-900"
+        >
+          <p className="font-semibold">Erro na analise</p>
+          <p className="mt-1 text-sm">{error}</p>
+        </div>
       ) : null}
 
       {data ? (
-        <Box borderWidth="1px" borderRadius="lg" p={5} bg="white">
-          <Text><b>Total combinacoes:</b> {data.totalCombinacoes}</Text>
-          <Text><b>Total filtradas:</b> {data.totalFiltradas}</Text>
-          <Text>
-            <b>Paginacao:</b> pagina {data.paginacao.page} de {data.paginacao.totalPaginas}
-          </Text>
-          <Text><b>Cartelas nesta pagina:</b> {data.cartelas.length}</Text>
-        </Box>
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <p>
+            <span className="font-semibold">Total combinacoes:</span>{' '}
+            {data.totalCombinacoes}
+          </p>
+          <p className="mt-1">
+            <span className="font-semibold">Total filtradas:</span>{' '}
+            {data.totalFiltradas}
+          </p>
+          <p className="mt-1">
+            <span className="font-semibold">Paginacao:</span> pagina{' '}
+            {data.paginacao.page} de {data.paginacao.totalPaginas}
+          </p>
+          <p className="mt-1">
+            <span className="font-semibold">Cartelas nesta pagina:</span>{' '}
+            {data.cartelas.length}
+          </p>
+        </section>
       ) : null}
-    </Stack>
+    </div>
   )
 }
