@@ -1,16 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { isAxiosError } from 'axios'
 import { analisarFiltros } from '@/src/services/filtros/filtros.service'
-import { FiltroPayload, FiltroResponse } from '@/src/types/filtros'
+import type { FiltroPayload, FiltroResponse } from '@/src/types/filtros'
 
 export function useFiltroAnalise() {
   const [data, setData] = useState<FiltroResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  async function executar(payload: FiltroPayload) {
+  const executar = useCallback(async (payload: FiltroPayload) => {
     setLoading(true)
     setError(null)
 
@@ -37,7 +37,7 @@ export function useFiltroAnalise() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   return {
     data,

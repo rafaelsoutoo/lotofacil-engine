@@ -1,6 +1,6 @@
 export const ROUTES = {
   HOME: '/',
-  FILTROS: '/filtros',
+  ESTATISTICAS: '/estatisticas',
 } as const
 
 export type AppRouteKey = keyof typeof ROUTES
@@ -15,12 +15,12 @@ type RouteMeta = {
 export const ROUTE_META: Record<AppRouteKey, RouteMeta> = {
   HOME: {
     path: ROUTES.HOME,
-    title: 'Início',
+    title: 'Análise',
     requiresAuth: false,
   },
-  FILTROS: {
-    path: ROUTES.FILTROS,
-    title: 'Filtros',
+  ESTATISTICAS: {
+    path: ROUTES.ESTATISTICAS,
+    title: 'Estatísticas',
     requiresAuth: false,
   },
 }
