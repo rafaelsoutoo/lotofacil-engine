@@ -19,6 +19,8 @@ export type FiltroPayload = {
   pageLimite?: number
 }
 
+export type FiltroCriteria = Omit<FiltroPayload, 'page' | 'pageLimite'>
+
 export type CartelaComMetricas = {
   dezenas: number[]
   soma: number

@@ -1,16 +1,4 @@
-import type { FiltroPayload } from '@/src/types/filtros'
-
-export type FiltroCriteria = Omit<FiltroPayload, 'page' | 'pageLimite'>
-
-export const DEFAULT_FILTRO_COMPLETO: FiltroPayload = {
-  somaMin: 170,
-  somaMax: 220,
-  paresMin: 6,
-  paresMax: 9,
-  maiorSequenciaMax: 5,
-  page: 1,
-  pageLimite: 20,
-}
+import type { FiltroCriteria, FiltroPayload } from '@/src/types/filtros'
 
 export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100, 200] as const
 
@@ -18,11 +6,8 @@ export type PageSizeOption = (typeof PAGE_SIZE_OPTIONS)[number]
 
 export type FiltroTag = { key: string; label: string }
 
-export function defaultCriteria(): FiltroCriteria {
-  const { page, pageLimite, ...criteria } = DEFAULT_FILTRO_COMPLETO
-  void page
-  void pageLimite
-  return criteria
+export function emptyFiltroCriteria(): FiltroCriteria {
+  return {}
 }
 
 export function mergeFiltroRequest(
