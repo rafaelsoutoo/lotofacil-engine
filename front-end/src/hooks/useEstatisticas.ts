@@ -11,12 +11,19 @@ import type {
   EstatisticasSomaResponse,
 } from '@/src/types/estatisticas'
 
-export function useEstatisticas() {
+type UseEstatisticasOptions = {
+  /** Se false, não busca até virar true (ex.: modal fechado). Padrão: true. */
+  enabled?: boolean
+}
+
+export function useEstatisticas(options?: UseEstatisticasOptions) {
+  const enabled = options?.enabled ?? true
+
   const [soma, setSoma] = useState<EstatisticasSomaResponse | null>(null)
   const [sequencia, setSequencia] = useState<EstatisticasSequenciaItem[] | null>(
     null,
   )
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(() => enabled)
   const [error, setError] = useState<string | null>(null)
 
   const carregar = useCallback(async () => {
@@ -45,11 +52,12 @@ export function useEstatisticas() {
   }, [])
 
   useEffect(() => {
-    const t = setTimeout(() => {
+    if (!enabled) return
+    const id = window.setTimeout(() => {
       void carregar()
     }, 0)
-    return () => clearTimeout(t)
-  }, [carregar])
+    return () => window.clearTimeout(id)
+  }, [enabled, carregar])
 
   return { soma, sequencia, loading, error, recarregar: carregar }
 }

@@ -9,12 +9,6 @@ import {
   mergeFiltroRequest,
   type PageSizeOption,
 } from '@/src/lib/loto/filtro-criteria'
-import {
-  criteriaToForm,
-  emptyFiltroCriteriaForm,
-  parseFormToCriteria,
-  type FiltroCriteriaFormState,
-} from '@/src/lib/loto/filtro-criteria-form'
 import type { FiltroCriteria } from '@/src/types/filtros'
 import { AnaliseIntroPanel } from './analise-intro-panel'
 import { CombinacoesPanel } from './combinacoes-panel'
@@ -25,7 +19,6 @@ export function LotoAnaliseWorkspace() {
   const [page, setPage] = useState(1)
   const [pageLimite, setPageLimite] = useState<PageSizeOption>(20)
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [form, setForm] = useState<FiltroCriteriaFormState>(emptyFiltroCriteriaForm)
 
   const { data, error, loading, executar } = useFiltroAnalise()
 
@@ -39,20 +32,19 @@ export function LotoAnaliseWorkspace() {
 
   const tags = useMemo(() => buildFilterTags(criteria), [criteria])
 
-  const openDrawer = () => {
-    setForm(criteriaToForm(criteria))
+  const openDrawer = useCallback(() => {
     setDrawerOpen(true)
-  }
+  }, [])
 
-  const applyDrawer = () => {
-    setCriteria(parseFormToCriteria(form))
+  const applyCriteria = useCallback((next: FiltroCriteria) => {
+    setCriteria(next)
     setPage(1)
     setDrawerOpen(false)
-  }
+  }, [])
 
-  const setField = (key: keyof FiltroCriteriaFormState, value: string) => {
-    setForm((prev) => ({ ...prev, [key]: value }))
-  }
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false)
+  }, [])
 
   return (
     <Box>
@@ -82,10 +74,9 @@ export function LotoAnaliseWorkspace() {
       <FiltrosDrawer
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
-        form={form}
-        onFieldChange={setField}
-        onApply={applyDrawer}
-        onCancel={() => setDrawerOpen(false)}
+        criteria={criteria}
+        onApplyCriteria={applyCriteria}
+        onCancel={closeDrawer}
         loading={loading}
       />
     </Box>

@@ -1,5 +1,6 @@
 'use client'
 
+import { memo, useCallback, useState } from 'react'
 import {
   Badge,
   Box,
@@ -34,7 +35,7 @@ type CombinacoesPanelProps = {
   onPageLimiteChange: (limite: PageSizeOption) => void
 }
 
-export function CombinacoesPanel({
+function CombinacoesPanelImpl({
   data,
   loading,
   page,
@@ -42,6 +43,22 @@ export function CombinacoesPanel({
   pageLimite,
   onPageLimiteChange,
 }: CombinacoesPanelProps) {
+  const [editingPage, setEditingPage] = useState(false)
+  const [pageDraft, setPageDraft] = useState(() => String(page))
+  const pageInputValue = editingPage ? pageDraft : String(page)
+
+  const commitPageDraft = useCallback(() => {
+    const raw = pageDraft.trim()
+    const parsed = raw === '' ? 1 : Number.parseInt(raw, 10)
+    const n = Number.isFinite(parsed) ? Math.max(1, parsed) : 1
+    const maxPages = Math.max(1, data?.paginacao.totalPaginas ?? 1)
+    const clamped = Math.min(n, maxPages)
+    setPageDraft(String(clamped))
+    if (clamped !== page) {
+      onPageChange(clamped)
+    }
+  }, [pageDraft, data?.paginacao.totalPaginas, page, onPageChange])
+
   return (
     <Card.Root
       position={{ md: 'sticky' }}
@@ -94,15 +111,29 @@ export function CombinacoesPanel({
             <Text fontSize="xs" color="gray.600" mb={1}>
               Página
             </Text>
+            <Text fontSize="2xs" color="gray.500" mb={1}>
+              Enter ou clique fora para ir — evita busca a cada dígito.
+            </Text>
             <Input
-              type="number"
-              min={1}
+              type="text"
+              inputMode="numeric"
               size="sm"
               disabled={loading || !data}
-              value={page}
-              onChange={(e) => {
-                const v = Math.max(1, Number(e.target.value) || 1)
-                onPageChange(v)
+              value={pageInputValue}
+              onFocus={() => {
+                setEditingPage(true)
+                setPageDraft(String(page))
+              }}
+              onChange={(e) => setPageDraft(e.target.value)}
+              onBlur={() => {
+                commitPageDraft()
+                setEditingPage(false)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  ;(e.target as HTMLInputElement).blur()
+                }
               }}
             />
           </Box>
@@ -193,3 +224,5 @@ export function CombinacoesPanel({
     </Card.Root>
   )
 }
+
+export const CombinacoesPanel = memo(CombinacoesPanelImpl)

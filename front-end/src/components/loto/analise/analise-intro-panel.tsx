@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import {
   Badge,
   Box,
@@ -20,7 +21,7 @@ type AnaliseIntroPanelProps = {
   onOpenFiltros: () => void
 }
 
-export function AnaliseIntroPanel({
+function AnaliseIntroPanelImpl({
   tags,
   error,
   onOpenFiltros,
@@ -29,7 +30,10 @@ export function AnaliseIntroPanel({
     <Stack gap={6}>
       <Box>
         <Heading size="lg">Análise combinatória</Heading>
-        
+        <Text mt={2} color="gray.600">
+          Lotofácil: 15 dezenas em 25. Ajuste filtros quando quiser; a lista de
+          possibilidades atualiza só após aplicar.
+        </Text>
       </Box>
 
       {tags.length === 0 ? (
@@ -69,3 +73,5 @@ export function AnaliseIntroPanel({
     </Stack>
   )
 }
+
+export const AnaliseIntroPanel = memo(AnaliseIntroPanelImpl)
